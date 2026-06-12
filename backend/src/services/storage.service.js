@@ -1,17 +1,36 @@
-const { imagekit } = require('@imagekit/nodejs');
-require('dotenv').config({ path: '../.env' })
+const { ImageKit } = require("@imagekit/nodejs");
+require('dotenv').config({ path: '../.env' });
 
-const imageKitClint = new ImageKit({
+const imageKitClient = new ImageKit({
     privateKey: process.env.IMAGE_KIT_API_KEY
 });
 
 const uploadMusic = async (file) => {
-    const result = await imageKitClint.files.upload({
+    return await imageKitClient.files.upload({
         file,
-        file: "spotify/musics",
-        fileName: 'file-name.jpg' + Date.now(),
+        fileName: `music-${Date.now()}.mp3`,
+        folder: "/spotify/musics"
     });
-    return result;
-}
+};
 
-module.exports = { uploadMusic }
+const uploadMusicThumbnail = async (file) => {
+    return await imageKitClient.files.upload({
+        file,
+        fileName: `music-thumbnail-${Date.now()}.jpg`,
+        folder: "/spotify/music-thumbnail"
+    });
+};
+
+const uploadAlbumThumbnail = async (file) => {
+    return await imageKitClient.files.upload({
+        file,
+        fileName: `album-thumbnail-${Date.now()}.jpg`,
+        folder: "/spotify/album-thumbnail"
+    });
+};
+
+module.exports = {
+    uploadMusic,
+    uploadMusicThumbnail,
+    uploadAlbumThumbnail
+};
