@@ -2,6 +2,8 @@ const uploadFiles = require('../services/storage.service');
 
 const musicModel = require('../models/music.model');
 const albumModel = require('../models/album.model');
+const savedModel = require('../models/saved.model');
+const historyModel = require('../models/history.model');
 
 const createAlbum = async (req, res) => {
     try {
@@ -50,8 +52,8 @@ const createMusic = async (req, res) => {
 
         const musicFile = req.files?.musicURI?.[0];
         const thumbnailFile = req.files?.musicThumbnail?.[0];
-        console.log(req.files);
-        console.log(req.body);
+        // console.log(req.files);
+        // console.log(req.body);
         if (!musicFile || !thumbnailFile) {
             return res.status(400).json({
                 success: false,
@@ -63,14 +65,14 @@ const createMusic = async (req, res) => {
             await uploadFiles.uploadMusic(
                 musicFile.buffer.toString('base64')
             );
-        console.log("musicUpload:", musicUpload);
+        // console.log("musicUpload:", musicUpload);
 
         const thumbnailUpload =
             await uploadFiles.uploadMusicThumbnail(
                 thumbnailFile.buffer.toString('base64')
             );
-        console.log("thumbnailUpload:", thumbnailUpload);
-        console.log("Thumbnail size:", thumbnailFile.size);
+        // console.log("thumbnailUpload:", thumbnailUpload);
+        // console.log("Thumbnail size:", thumbnailFile.size);
         const addMusic = await musicModel.create({
             musicName,
             musicURI: musicUpload.url,
@@ -163,7 +165,7 @@ const getAllMusic = async (req, res) => {
         });
     }
 
-}
+};
 
 const getAllAlbums = async (req, res) => {
     try {
@@ -196,7 +198,7 @@ const getAllAlbums = async (req, res) => {
         });
     }
 
-}
+};
 
 const getMusicAlbumSelect = async (req, res) => {
     try {
@@ -228,13 +230,277 @@ const getMusicAlbumSelect = async (req, res) => {
         });
     }
 
-}
+};
 
-// const deleteAlbum 
+const deleteAlbum = async (req, res) => {
+    try {
+        const albumId = req.params.albumId;
 
-// const saveMusic
+        const findAlbum = await albumModel.findById(albumId);
 
-// const getAlbumsByAuthor
+        if (!findAlbum) return res.status(401).json({
+            status: false,
+            message: "no album exists with this id"
+        });
+
+        const deleteAlbum = await albumModel.findByIdAndDelete(albumId);
+
+        return res.status(200).json({
+            status: "success",
+            message: "album deleted successfully"
+        })
+    } catch (error) {
+        console.log(
+            'ERROR || MUSIC CONTROLLER || DELETE ALBUM ||',
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+
+};
+
+const saveMusic = async (req, res) => {
+    try {
+        const { musicId } = req.body;
+
+        if (!musicId) return res.status(401).json({
+            status: false,
+            message: "Couldnt fetch music data. "
+        });
+
+        const saveMusic = await savedModel.create({
+            user: req.user._id,
+            music: musicId
+        });
+
+        if (!saveMusic) return res.json(400).json({
+            status: false,
+            message: "music couldnt be saved"
+        })
+        return res.status(200).json({
+            status: "success",
+            message: musicId + " was saved successfully"
+        })
+    } catch (error) {
+        console.log("ERROR || SAVE SONG || ", error);
+
+        if (error.code === 11000) {
+            return res.status(409).json({
+                status: false,
+                message: "Song already saved"
+            });
+        }
+
+        return res.status(500).json({
+            status: false,
+            message: error.message
+        });
+    }
+};
+
+const getAlbumsByAuthor = async (req, res) => {
+    try {
+        const album = await albumModel.find({
+            author: req.user._id
+        });
+
+        if (!album) return res.status(401).json({
+            status: false,
+            message: "Album doesnot exist"
+        });
+
+        return res.status(200).json({
+            status: "success",
+            message: album
+        });
+
+    } catch (error) {
+        console.error("ERROR || GET ALBUM BY AUTHOR || ", error);
+    }
+};
+
+const history = async (req, res) => {
+
+    try {
+        const { musicId } = req.body;
+
+        const saveHistory = await historyModel.create({
+            user: req.user._id,
+            music: musicId,
+        });
+
+        if (!saveHistory) return res.status(401).json({
+            status: false,
+            message: "history isnt saved"
+        });
+
+        return res.status(200).json({
+            status: "success",
+            message: saveHistory
+        });
+
+    } catch (error) {
+        console.error("ERROR || HOSTORY || ", error);
+        return res.status(500).json({
+            status: false,
+            message: error.message
+        });
+    }
+};
+
+const getSavedSongs = async (req, res) => {
+    try {
+        const savedSongs = await savedModel
+            .find({
+                user: req.user._id
+            })
+            .populate('music');
+
+        if (savedSongs.length === 0) return res.status(400).json({
+            status: false,
+            message: "Songs empty"
+        });
+
+        return res.status(200).json({
+            status: "success",
+            data: savedSongs
+        });
+
+    } catch (error) {
+        console.error("ERROR || GET SAVED SONGS || ", error);
+        return res.status(500).json({
+            status: false,
+            message: error.message
+        });
+    }
+};
+
+const deleteSavedSongs = async (req, res) => {
+    try {
+        const { songId } = req.params;
+
+        const deletedSong = await savedModel.findOneAndDelete({
+            user: req.user._id,
+            music: songId
+        });
+
+        if (!deletedSong) {
+            return res.status(404).json({
+                status: false,
+                message: "Song not found in saved songs"
+            });
+        }
+
+        return res.status(200).json({
+            status: true,
+            message: `Song deleted successfully: ${songId}`
+        });
+
+    } catch (error) {
+        console.error("ERROR || DELETE SAVED SONGS || ", error);
+
+        return res.status(500).json({
+            status: false,
+            message: error.message
+        });
+    }
+};
+
+const getSavedHistory = async (req, res) => {
+    try {
+        const savedHistory = await historyModel
+            .find({
+                user: req.user._id
+            })
+            .populate('music');
+
+        if (savedHistory.length === 0) return res.status(400).json({
+            status: false,
+            message: "history empty"
+        });
+
+        return res.status(200).json({
+            status: "success",
+            data: savedHistory
+        });
+
+    } catch (error) {
+        console.error("ERROR || GET SAVED HISTORY || ", error);
+        return res.status(500).json({
+            status: false,
+            message: error.message
+        });
+    }
+};
+
+const deleteSavedHistory = async (req, res) => {
+    try {
+        const { musicId } = req.params;
+
+        const deleteHistory = await historyModel.findOneAndDelete({
+            user: req.user._id,
+            music: musicId
+        });
+
+        if (!deleteHistory) {
+            return res.status(404).json({
+                status: false,
+                message: "history not found in saved history"
+            });
+        }
+
+        return res.status(200).json({
+            status: true,
+            message: `history deleted successfully: ${musicId}`
+        });
+
+    } catch (error) {
+        console.error("ERROR || DELETE SAVED HISTORY || ", error);
+
+        return res.status(500).json({
+            status: false,
+            message: error.message
+        });
+    }
+};
+
+const searchMusic = async (req, res) => {
+    try {
+        const { q } = req.query;
+
+        if (!q) {
+            return res.status(400).json({
+                status: false,
+                message: "Search query is required"
+            });
+        }
+
+        const musics = await musicModel.find({
+            musicName: {
+                $regex: q, // Completes for half typed title
+                $options: 'i' // Ignore uppercase/lowercase.
+            }
+        });
+
+        return res.status(200).json({
+            status: true,
+            data: musics
+        });
+
+    } catch (error) {
+        console.error("ERROR || SEARCH MUSIC ||", error);
+
+        return res.status(500).json({
+            status: false,
+            message: error.message
+        });
+    }
+};
+
 
 module.exports = {
     createAlbum,
@@ -242,5 +508,14 @@ module.exports = {
     deleteMusic,
     getAllMusic,
     getAllAlbums,
-    getMusicAlbumSelect
+    getMusicAlbumSelect,
+    deleteAlbum,
+    saveMusic,
+    getAlbumsByAuthor,
+    history,
+    getSavedSongs,
+    deleteSavedSongs,
+    getSavedHistory,
+    deleteSavedHistory,
+    searchMusic
 };

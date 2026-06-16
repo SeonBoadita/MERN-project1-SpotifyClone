@@ -18,6 +18,7 @@ const validateIfAuthor = async (req, res, next) => {
             message: "You are not a author"
         });
         req.user = decoded;
+        // console.log("CONSOLE",decoded)
 
     } catch (error) {
         return res.status(401), json({

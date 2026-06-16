@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const createToken = async (req, res) => {
     try {
         const user = req.user;
+        // console.log("User data: ",user)
         if (!user) {
             return res.status(500).json({
                 status: "fail",

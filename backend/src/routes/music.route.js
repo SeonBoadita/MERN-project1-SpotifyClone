@@ -52,4 +52,58 @@ route.get(
     musicsController.getMusicAlbumSelect
 );
 
+route.delete(
+    '/delete-album/:albumId',
+    validateAuthor.validateIfAuthor,
+    musicsController.deleteAlbum
+);
+
+route.post(
+    '/save',
+    verifyUser.verifyUserLogin,
+    musicsController.saveMusic
+);
+
+route.get(
+    '/get-authors-album',
+    validateAuthor.validateIfAuthor,
+    musicsController.getAlbumsByAuthor
+);
+
+route.post(
+    '/add-to-history',
+    verifyUser.verifyUserLogin,
+    musicsController.history
+);
+
+route.get(
+    '/saved-songs',
+    verifyUser.verifyUserLogin,
+    musicsController.getSavedSongs
+);
+
+route.delete(
+    '/delete-saved-songs/:songId',
+    verifyUser.verifyUserLogin,
+    musicsController.deleteSavedSongs
+);
+
+route.get(
+    '/saved-history',
+    verifyUser.verifyUserLogin,
+    musicsController.getSavedHistory
+);
+
+route.delete(
+    '/delete-saved-history/:musicId',
+    verifyUser.verifyUserLogin,
+    musicsController.deleteSavedHistory
+);
+
+route.get(
+    '/search',
+    verifyUser.verifyUserLogin,
+    musicsController.searchMusic
+);
+
 module.exports = route;
