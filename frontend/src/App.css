@@ -13,10 +13,26 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* 0.5px border using box-shadow (border-width rounds up to 1px, box-shadow doesn't) */
+  .border-thin-green {
+    box-shadow: 0 0 0 0.2px var(--green);
+  }
+
+  .border-r-thin-green {
+    box-shadow: 0.2px 0 0 0 var(--green);
+  }
+
+  .text-tall {
+    display: inline-block;
+    transform: scaleY(1.3);
+    transform-origin: bottom;
+  }
 }
 
 :root {
   --green: #bbfc07;
+  --darkgreen: #87ac22;
   --transparent-mid-green: #d5ff4d45;
   --transparent-light-green: #d5ff4d0f;
 }

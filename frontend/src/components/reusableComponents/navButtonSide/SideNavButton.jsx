@@ -15,11 +15,11 @@ const SideNavButton = ({ name }) => {
     return (
         <>
             <NavLink
-                to="/"
+                to={`/${name.toLowerCase()}`}
                 className={({ isActive }) =>
                     `flex p-2 rounded-md ${isActive
-                        ? "text-white hover:text-(--green) hover:bg-(--transparent-light-green)"
-                        : "text-(--green) hover:text-(--green) font-bold"
+                        ? "text-(--green) hover:text-(--green) bg-(--transparent-light-green)"
+                        : "text-white hover:text-(--green) hover:bg-(--transparent-light-green)"
                     } items-center gap-2 pl-4`
                 }
             >

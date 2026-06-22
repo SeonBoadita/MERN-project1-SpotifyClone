@@ -1,10 +1,10 @@
 import SideNavBar from "./SideNavBar"
 import SidePlaylist from "./sidePlaylist"
 
-const Right = () => {
+const Left = () => {
     return (
         <>
-            <div className="right-nav border-r border-(--transparent-mid-green) w-[14vw] h-full flex flex-col">
+            <div className="left-nav bg-black w-[14vw] border-r border-(--transparent-mid-green) h-full flex flex-col">
                 <SideNavBar />
                 <SidePlaylist />
             </div>
@@ -12,4 +12,4 @@ const Right = () => {
     )
 }
 
-export default Right
+export default Left

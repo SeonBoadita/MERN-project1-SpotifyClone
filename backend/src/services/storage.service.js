@@ -2,7 +2,9 @@ const ImageKit = require("imagekit");
 require('dotenv').config({ path: '../.env' });
 
 const imageKitClient = new ImageKit({
-    privateKey: process.env.IMAGE_KIT_API_KEY
+    publicKey: process.env.IMAGE_KIT_PUBLIC_KEY || "dummy_public_key",
+    privateKey: process.env.IMAGE_KIT_API_KEY,
+    urlEndpoint: process.env.IMAGE_KIT_URL_ENDPOINT || "https://ik.imagekit.io/dummy_id"
 });
 
 const uploadMusic = async (file) => {
