@@ -1,4 +1,4 @@
-const { ImageKit } = require("@imagekit/nodejs");
+const ImageKit = require("imagekit");
 require('dotenv').config({ path: '../.env' });
 
 const imageKitClient = new ImageKit({

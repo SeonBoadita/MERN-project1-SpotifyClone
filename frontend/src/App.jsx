@@ -1,8 +1,12 @@
+import Home from "./pages/Home"
+
 const App = () => {
   return (
-    <div>
-      App
-    </div>
+    <>
+      <div className="parent-div w-full h-screen p-3 bg-black overflow-hidden">
+        <Home />
+      </div>
+    </>
   )
 }
 
