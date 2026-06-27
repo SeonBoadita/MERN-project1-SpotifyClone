@@ -1,4 +1,4 @@
-import { OrbitControls } from "@react-three/drei"
+// import { OrbitControls } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
 
 const Model3D = () => {
@@ -9,7 +9,7 @@ const Model3D = () => {
                     <boxGeometry args={[1, 1, 1]} />
                     <meshBasicMaterial />
                 </mesh>
-                <OrbitControls />
+                {/* <OrbitControls /> */}
             </Canvas>
         </>
     )
