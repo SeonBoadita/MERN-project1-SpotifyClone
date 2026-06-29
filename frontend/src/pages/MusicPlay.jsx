@@ -46,13 +46,13 @@ const MusicPlay = () => {
                     <div className="flex items-center gap-3 tracking-widest text-xs font-semibold">
                         <div className="w-2 h-2 rounded-full bg-(--green)"></div>
                         <span className="text-black">NOW PLAYING</span>
-                        <div className="flex items-end gap-[2px] h-3 ml-2">
-                            <div className="w-[2px] h-[60%] bg-(--green)"></div>
-                            <div className="w-[2px] h-[100%] bg-(--green)"></div>
-                            <div className="w-[2px] h-[40%] bg-(--green)"></div>
-                            <div className="w-[2px] h-[80%] bg-(--green)"></div>
-                            <div className="w-[2px] h-[30%] bg-(--green)"></div>
-                            <div className="w-[2px] h-[70%] bg-(--green)"></div>
+                        <div className="flex items-end gap-0.5 h-3 ml-2">
+                            <div className="w-0.5 h-[60%] bg-(--green)"></div>
+                            <div className="w-0.5 h-full bg-(--green)"></div>
+                            <div className="w-0.5 h-[40%] bg-(--green)"></div>
+                            <div className="w-0.5 h-[80%] bg-(--green)"></div>
+                            <div className="w-0.5 h-[30%] bg-(--green)"></div>
+                            <div className="w-0.5 h-[70%] bg-(--green)"></div>
                         </div>
                     </div>
                 </div>
@@ -63,10 +63,10 @@ const MusicPlay = () => {
                 {/* 3D Vinyl Side */}
                 <div className="w-[45%] h-full flex items-center justify-center relative">
                     {/* Add some green decorative brush strokes using CSS */}
-                    <div className="absolute w-[300px] h-[40px] bg-(--green) opacity-80 blur-sm transform -rotate-45 top-1/4 left-1/4 -z-10 mix-blend-multiply"></div>
-                    <div className="absolute w-[200px] h-[30px] bg-(--green) opacity-80 blur-sm transform -rotate-45 bottom-1/4 left-1/3 -z-10 mix-blend-multiply"></div>
+                    <div className="absolute w-75 h-10 bg-(--green) opacity-80 blur-sm transform -rotate-45 top-1/4 left-1/4 -z-10 mix-blend-multiply"></div>
+                    <div className="absolute w-50 h-7.5 bg-(--green) opacity-80 blur-sm transform -rotate-45 bottom-1/4 left-1/3 -z-10 mix-blend-multiply"></div>
 
-                    <div className="w-full h-full min-h-[300px] flex items-center justify-center">
+                    <div className="w-full h-full min-h-75 flex items-center justify-center">
                         <Canvas camera={{ position: [0, 5, 0], fov: 45 }}>
                             <ambientLight intensity={0.5} />
                             <directionalLight position={[0, 10, 0]} intensity={3} color="#ffffff" castShadow />
@@ -143,11 +143,11 @@ const MusicPlay = () => {
                         <button className="hover:text-white transition-colors flex items-center gap-2 text-white">
                             <i className="fa-solid fa-list"></i> LYRICS
                         </button>
-                        <div className="w-[1px] h-4 bg-gray-800"></div>
+                        <div className="w-px h-4 bg-gray-800"></div>
                         <button className="hover:text-white transition-colors flex items-center gap-2">
                             <i className="fa-solid fa-list-ul"></i> QUEUE
                         </button>
-                        <div className="w-[1px] h-4 bg-gray-800"></div>
+                        <div className="w-px h-4 bg-gray-800"></div>
                         <button className="hover:text-white transition-colors flex items-center gap-2">
                             <i className="fa-solid fa-circle-info"></i> INFO
                         </button>
@@ -169,12 +169,12 @@ const MusicPlay = () => {
 
                     <div className="flex gap-4 overflow-x-auto scrollbar-hide px-10 w-full">
                         {/* Active Song Card */}
-                        <div className="min-w-[280px] bg-[#1a1a1a] border border-(--green) rounded-xl p-3 flex items-center gap-4 relative overflow-hidden group cursor-pointer shadow-[0_0_15px_rgba(187,252,7,0.1)]">
+                        <div className="min-w-70 bg-[#1a1a1a] border border-(--green) rounded-xl p-3 flex items-center gap-4 relative overflow-hidden group cursor-pointer shadow-[0_0_15px_rgba(187,252,7,0.1)]">
                             <div className="absolute top-0 left-0 w-1 h-full bg-(--green)"></div>
-                            <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+                            <div className="relative w-12 h-12 rounded-lg overflow-hidden shrink-0">
                                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-10">
                                     <div className="w-6 h-6 rounded-full bg-(--green) flex items-center justify-center text-black text-[10px]">
-                                        <i className="fa-solid fa-play ml-[2px]"></i>
+                                        <i className="fa-solid fa-play ml-0.5"></i>
                                     </div>
                                 </div>
                                 <img src={img} alt="cover" className="w-full h-full object-cover" />
@@ -184,10 +184,10 @@ const MusicPlay = () => {
                                 <span className="text-gray-400 text-xs truncate">Kevin MacLeod</span>
                             </div>
                             <div className="flex flex-col items-end gap-1">
-                                <div className="flex items-end gap-[1px] h-3">
-                                    <div className="w-[2px] h-[60%] bg-(--green)"></div>
-                                    <div className="w-[2px] h-[100%] bg-(--green)"></div>
-                                    <div className="w-[2px] h-[40%] bg-(--green)"></div>
+                                <div className="flex items-end gap-px h-3">
+                                    <div className="w-0.5 h-[60%] bg-(--green)"></div>
+                                    <div className="w-0.5 h-full bg-(--green)"></div>
+                                    <div className="w-0.5 h-[40%] bg-(--green)"></div>
                                 </div>
                                 <span className="text-gray-400 text-xs font-mono">3:21</span>
                             </div>
@@ -200,8 +200,8 @@ const MusicPlay = () => {
                             { title: 'Blobby Samba', artist: 'Kevin MacLeod', time: '3:53' },
                             { title: 'Notanico Merengue', artist: 'Kevin MacLeod', time: '3:01' }
                         ].map((song, i) => (
-                            <div key={i} className="min-w-[240px] bg-[#111111] hover:bg-[#1a1a1a] rounded-xl p-3 flex items-center gap-4 cursor-pointer transition-colors border border-transparent">
-                                <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 opacity-70 group-hover:opacity-100">
+                            <div key={i} className="min-w-60 bg-[#111111] hover:bg-[#1a1a1a] rounded-xl p-3 flex items-center gap-4 cursor-pointer transition-colors border border-transparent">
+                                <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 opacity-70 group-hover:opacity-100">
                                     <img src={img} alt="cover" className="w-full h-full object-cover" />
                                 </div>
                                 <div className="flex flex-col flex-1 truncate">

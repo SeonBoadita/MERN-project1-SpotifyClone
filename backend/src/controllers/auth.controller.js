@@ -41,25 +41,21 @@ const userRegister = async (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
     try {
-        const { username, email, password } = req.body;
+        const { email, password } = req.body;
 
-        // Ensure all fields are provided
-        if (!username || !email || !password) {
+        if (!email || !password) {
             return res.status(400).json({
                 status: "fail",
-                message: "Please provide username, email, and password"
+                message: "Please provide email and password"
             });
         }
 
-        const user = await userModel.findOne({
-            username: username,
-            email: email
-        });
+        const user = await userModel.findOne({ email: email });
 
         if (!user) {
             return res.status(401).json({
                 status: "fail",
-                message: "Invalid username or email"
+                message: "Invalid email"
             });
         }
 

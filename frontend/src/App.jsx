@@ -6,6 +6,8 @@ import AllAlbums from "./components/pageComponents/tabs/AllAlbums";
 import AllAuthors from "./components/pageComponents/tabs/AllAuthors";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Auth from "./pages/Auth";
+import AuthorAuth from "./pages/AuthorAuth";
 
 const App = () => {
   return (
@@ -18,6 +20,8 @@ const App = () => {
             <Route path="albums" element={<AllAlbums />} />
             <Route path="artists" element={<AllAuthors />} />
           </Route>
+          <Route path="/login" element={<Auth />} />
+          <Route path="/author-login" element={<AuthorAuth />} />
           <Route path="/play" element={<MusicPlay />} />
           <Route path="/aboutus" element={<About />} />
           <Route path="/contactus" element={<Contact />} />

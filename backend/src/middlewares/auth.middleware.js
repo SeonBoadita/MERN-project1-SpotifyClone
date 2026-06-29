@@ -18,7 +18,7 @@ const createToken = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true, // Security best practice
-            secure: process.env.JWT_TOKEN,
+            secure: process.env.NODE_ENV === "production",
         });
 
         res.status(req.statusCode || 200).json({

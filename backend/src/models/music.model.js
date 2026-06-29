@@ -24,6 +24,11 @@ const musicSchema = new mongoose.Schema({
         required: true
     },
 
+    duration: {
+        type: Number,
+        default: 0
+    },
+
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",

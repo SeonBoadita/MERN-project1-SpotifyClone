@@ -26,8 +26,8 @@ const AuthorAuth = ({ defaultIsLogin = true }) => {
 
             {/* Left Side (Decorative) */}
             <div className="w-[45%] h-full flex flex-col items-center justify-center relative p-12">
-                <div className="absolute w-[300px] h-[40px] bg-(--green) opacity-80 blur-sm transform -rotate-45 top-1/4 left-1/4 mix-blend-multiply"></div>
-                <div className="absolute w-[200px] h-[30px] bg-(--green) opacity-80 blur-sm transform -rotate-45 bottom-1/4 left-1/3 mix-blend-multiply"></div>
+                <div className="absolute w-75 h-10 bg-(--green) opacity-80 blur-sm transform -rotate-45 top-1/4 left-1/4 mix-blend-multiply"></div>
+                <div className="absolute w-50 h-7.5 bg-(--green) opacity-80 blur-sm transform -rotate-45 bottom-1/4 left-1/3 mix-blend-multiply"></div>
 
                 <div className="relative z-10 text-center flex flex-col items-center">
                     <div className="w-24 h-24 bg-black rounded-full mb-8 flex items-center justify-center shadow-[0_0_40px_rgba(187,252,7,0.4)]">
@@ -93,7 +93,7 @@ const AuthorAuth = ({ defaultIsLogin = true }) => {
                                 <input
                                     type="email"
                                     required
-                                    placeholder="hello@example.com"
+                                    placeholder="user@example.com"
                                     className="w-full bg-[#111111] border border-gray-800 text-white rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:border-(--green) transition-colors"
                                 />
                             </div>

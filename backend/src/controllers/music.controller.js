@@ -1,4 +1,6 @@
 const uploadFiles = require('../services/storage.service');
+const mm = require('music-metadata');
+
 
 const musicModel = require('../models/music.model');
 const albumModel = require('../models/album.model');
@@ -60,6 +62,8 @@ const createMusic = async (req, res) => {
                 message: 'Music file and thumbnail are required'
             });
         }
+        const metadata = await mm.parseBuffer(musicFile.buffer);
+        const durationInSeconds = metadata.format.duration;
 
         const musicUpload =
             await uploadFiles.uploadMusic(
@@ -71,14 +75,17 @@ const createMusic = async (req, res) => {
             await uploadFiles.uploadMusicThumbnail(
                 thumbnailFile.buffer.toString('base64')
             );
-        // console.log("thumbnailUpload:", thumbnailUpload);
-        // console.log("Thumbnail size:", thumbnailFile.size);
+
+        // Use the duration we parsed at the top of the function (or 0 if missing)
+        const duration = durationInSeconds || 0;
+
         const addMusic = await musicModel.create({
             musicName,
             musicURI: musicUpload.url,
             musicThumbnail: thumbnailUpload.url,
             album: albumId,
-            author: req.user._id
+            author: req.user._id,
+            duration: duration
         });
 
         return res.status(201).json({
@@ -138,6 +145,8 @@ const getAllMusic = async (req, res) => {
         const limit = Number(req.query.limit) || 10;
         const musics = await musicModel
             .find()
+            .populate("author", "username")
+            .populate("album", "albumName")
             .skip((page - 1) * limit)
             .limit(limit);
 
@@ -174,7 +183,7 @@ const getAllAlbums = async (req, res) => {
             .find()
             .limit(limit);
 
-        if (album.length === 0) return res.status(401).json({
+        if (album.length === 0) return res.status(404).json({
             status: "faliur",
             message: "album not found",
             album: []
@@ -238,7 +247,7 @@ const deleteAlbum = async (req, res) => {
 
         const findAlbum = await albumModel.findById(albumId);
 
-        if (!findAlbum) return res.status(401).json({
+        if (!findAlbum) return res.status(404).json({
             status: false,
             message: "no album exists with this id"
         });
@@ -267,7 +276,7 @@ const saveMusic = async (req, res) => {
     try {
         const { musicId } = req.body;
 
-        if (!musicId) return res.status(401).json({
+        if (!musicId) return res.status(400).json({
             status: false,
             message: "Couldnt fetch music data. "
         });
@@ -277,7 +286,7 @@ const saveMusic = async (req, res) => {
             music: musicId
         });
 
-        if (!saveMusic) return res.json(400).json({
+        if (!saveMusic) return res.status(400).json({
             status: false,
             message: "music couldnt be saved"
         })
@@ -308,7 +317,7 @@ const getAlbumsByAuthor = async (req, res) => {
             author: req.user._id
         });
 
-        if (!album) return res.status(401).json({
+        if (!album) return res.status(404).json({
             status: false,
             message: "Album doesnot exist"
         });
@@ -333,7 +342,7 @@ const history = async (req, res) => {
             music: musicId,
         });
 
-        if (!saveHistory) return res.status(401).json({
+        if (!saveHistory) return res.status(400).json({
             status: false,
             message: "history isnt saved"
         });
@@ -360,7 +369,7 @@ const getSavedSongs = async (req, res) => {
             })
             .populate('music');
 
-        if (savedSongs.length === 0) return res.status(400).json({
+        if (savedSongs.length === 0) return res.status(404).json({
             status: false,
             message: "Songs empty"
         });
@@ -418,7 +427,7 @@ const getSavedHistory = async (req, res) => {
             })
             .populate('music');
 
-        if (savedHistory.length === 0) return res.status(400).json({
+        if (savedHistory.length === 0) return res.status(404).json({
             status: false,
             message: "history empty"
         });
