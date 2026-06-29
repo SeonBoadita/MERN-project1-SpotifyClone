@@ -22,7 +22,7 @@ const DvdModel = () => {
             ref={modelRef}
             scale={2}
             position={[0, 0, 0]}
-            rotation={[-Math.PI/2, 0, 0]}
+            rotation={[-Math.PI / 2, 0, 0]}
         />
     );
 };

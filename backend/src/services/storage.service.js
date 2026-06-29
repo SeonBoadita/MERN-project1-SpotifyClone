@@ -8,7 +8,7 @@ const imageKitClient = new ImageKit({
 });
 
 const uploadMusic = async (file) => {
-    return await imageKitClient.files.upload({
+    return await imageKitClient.upload({
         file,
         fileName: `music-${Date.now()}.mp3`,
         folder: "/spotify/musics"
@@ -16,7 +16,7 @@ const uploadMusic = async (file) => {
 };
 
 const uploadMusicThumbnail = async (file) => {
-    return await imageKitClient.files.upload({
+    return await imageKitClient.upload({
         file,
         fileName: `music-thumbnail-${Date.now()}.jpg`,
         folder: "/spotify/music-thumbnail"
@@ -24,7 +24,7 @@ const uploadMusicThumbnail = async (file) => {
 };
 
 const uploadAlbumThumbnail = async (file) => {
-    return await imageKitClient.files.upload({
+    return await imageKitClient.upload({
         file,
         fileName: `album-thumbnail-${Date.now()}.jpg`,
         folder: "/spotify/album-thumbnail"
