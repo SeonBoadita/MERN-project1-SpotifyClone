@@ -1,13 +1,11 @@
-import { useRef, useEffect, useState } from "react"
+import { useRef, useEffect } from "react"
 import gsap from "gsap"
 import SongCard from "../../reusableComponents/SongCard"
-import api from '../../../api/axiosInstance.js'
-// import { useNavigate } from "react-router-dom"
+import useMusic from '../../../context/useMusic.js'
 
 const AllSongs = () => {
-    const [songs, setSongs] = useState([])
+    const { songs } = useMusic()
     const listRef = useRef(null)
-    // const navigate = useNavigate()
 
     useEffect(() => {
         const el = listRef.current
@@ -27,19 +25,6 @@ const AllSongs = () => {
         return () => el.removeEventListener("wheel", onWheel)
     }, [])
 
-    useEffect(() => {
-        api.get('/music/api/musics')
-            .then((res) => {
-                console.log("Fetched Songs: ", res.data)
-
-                if (res.data && res.data.musics) {
-                    setSongs(res.data.musics)
-                }
-            })
-            .catch(err => {
-                console.error("Error fetching songs: ", err)
-            })
-    }, [])
 
     return (
         <>
@@ -59,7 +44,6 @@ const AllSongs = () => {
                                 </tr>
                             </thead>
 
-                            {/* Render the songs from our state! */}
                             {songs.length > 0 ? (
                                 songs.map((song, index) => (
                                     <SongCard key={song._id} song={song} index={index + 1} />
