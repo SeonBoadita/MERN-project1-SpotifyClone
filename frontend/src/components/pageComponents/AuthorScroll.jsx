@@ -71,7 +71,7 @@ const AuthorScroll = () => {
         <>
             <div className="author w-full h-[40%] bg-black flex flex-col gap-2 p-4 min-w-0">
                 <div className="authCont flex justify-between h-[15%] items-center w-full">
-                    <div className="title w-fit font-semiboldbg-black">Authors</div>
+                    <div className="title w-fit font-semiboldbg-black">Artist</div>
                     <div className="right flex gap-4 items-center bg-black">
                         <div
                             ref={moveLeftRef}

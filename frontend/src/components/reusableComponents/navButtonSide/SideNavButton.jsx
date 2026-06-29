@@ -4,10 +4,8 @@ const SideNavButton = ({ name }) => {
     const getIcon = (name) => {
         switch (name.toLowerCase()) {
             case 'home': return 'fa-solid fa-house';
-            case 'library': return 'fa-solid fa-book';
-            case 'search': return 'fa-solid fa-magnifying-glass';
-            case 'playlists': return 'fa-solid fa-list';
-            case 'albums': return 'fa-solid fa-compact-disc';
+            case 'about us': return 'fa-solid fa-users';
+            case 'contact us': return 'fa-solid fa-envelope';
             default: return 'fa-solid fa-circle';
         }
     };
@@ -15,7 +13,7 @@ const SideNavButton = ({ name }) => {
     return (
         <>
             <NavLink
-                to={`/${name.toLowerCase()}`}
+                to={name.toLowerCase() === 'home' ? '/' : `/${name.toLowerCase().replace(/\s+/g, "")}`}
                 className={({ isActive }) =>
                     `flex p-2 rounded-md ${isActive
                         ? "text-(--green) hover:text-(--green) bg-(--transparent-light-green)"
