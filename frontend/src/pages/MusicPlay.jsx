@@ -1,9 +1,11 @@
-import { Suspense, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, Environment } from '@react-three/drei';
 import dvdModelUrl from '../models/dvd.glb?url';
 import img from '../images/image.png';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { isSongPlaying } from '../store/features/player/playerSlice';
 
 const DvdModel = () => {
     const { scene } = useGLTF(dvdModelUrl);
@@ -28,10 +30,43 @@ const DvdModel = () => {
 };
 
 const MusicPlay = () => {
-    const [isPlaying, setIsPlaying] = useState(true);
     const navigate = useNavigate();
+    const currentSongPlaying = useSelector((state) => state.player.currentSong);
+    const dispatch = useDispatch();
+    const isCurrentSongPlaying = useSelector((state) => state.player.isPlaying);
+    const audioRef = useRef(null);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
+
+    // Play or pause when Redux state changes
+    useEffect(() => {
+        if (!audioRef.current) return;
+        if (isCurrentSongPlaying) {
+            audioRef.current.play();
+        } else {
+            audioRef.current.pause();
+        }
+    }, [isCurrentSongPlaying]);
+
+    // Format seconds -> m:ss
+    const formatTime = (secs) => {
+        if (!secs || isNaN(secs)) return '0:00';
+        const m = Math.floor(secs / 60);
+        const s = Math.floor(secs % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+    };
+
+    const progressPercent = duration ? (currentTime / duration) * 100 : 0;
+
 
     return (
+        <>
+        <audio
+            ref={audioRef}
+            src={currentSongPlaying?.musicURI}
+            onTimeUpdate={(e) => setCurrentTime(e.target.currentTime)}
+            onLoadedMetadata={(e) => setDuration(e.target.duration)}
+        />
         <div className="w-full h-full rounded-2xl overflow-hidden flex flex-col font-sans relative"
             style={{
                 background: 'linear-gradient(110deg, #ffffff 35%, #050505 35%)',
@@ -89,8 +124,8 @@ const MusicPlay = () => {
                     </div>
 
                     <div className="flex justify-between items-start mb-2">
-                        <h1 className="text-6xl font-bold font-sans uppercase leading-none tracking-tighter" style={{ fontFamily: 'impact, sans-serif' }}>
-                            PIXEL PEEKER<br />POLKA - FASTER
+                        <h1 className="text-6xl font-medium font-sans uppercase leading-none tracking-tighter" style={{ fontFamily: 'impact, sans-serif' }}>
+                            {currentSongPlaying.musicName}
                         </h1>
                         <button className="text-(--green) hover:text-white transition-colors mt-2">
                             <i className="fa-regular fa-heart text-2xl"></i>
@@ -98,7 +133,7 @@ const MusicPlay = () => {
                     </div>
 
                     <div className="flex items-center gap-2 mb-12">
-                        <span className="text-gray-300 text-lg">Kevin MacLeod</span>
+                        <span className="text-gray-300 text-lg">{currentSongPlaying.author.username}</span>
                         <div className="w-4 h-4 rounded-full bg-(--green) flex items-center justify-center text-black text-[10px]">
                             <i className="fa-solid fa-check"></i>
                         </div>
@@ -106,13 +141,23 @@ const MusicPlay = () => {
 
                     {/* Progress Bar */}
                     <div className="w-full mb-8">
-                        <div className="w-full h-1 bg-gray-800 rounded-full mb-3 relative cursor-pointer">
-                            <div className="absolute top-0 left-0 h-full w-1/3 bg-(--green) rounded-full"></div>
-                            <div className="absolute top-1/2 left-1/3 w-3 h-3 bg-(--green) rounded-full transform -translate-x-1/2 -translate-y-1/2 shadow-[0_0_10px_rgba(187,252,7,0.5)]"></div>
+                        <div
+                            className="w-full h-1 bg-gray-800 rounded-full mb-3 relative cursor-pointer"
+                            onClick={(e) => {
+                                if (!audioRef.current || !duration) return;
+                                const rect = e.currentTarget.getBoundingClientRect();
+                                const clickX = e.clientX - rect.left;
+                                const newTime = (clickX / rect.width) * duration;
+                                audioRef.current.currentTime = newTime;
+                                setCurrentTime(newTime);
+                            }}
+                        >
+                            <div className="absolute top-0 left-0 h-full bg-(--green) rounded-full" style={{ width: `${progressPercent}%` }}></div>
+                            <div className="absolute top-1/2 w-3 h-3 bg-(--green) rounded-full transform -translate-x-1/2 -translate-y-1/2 shadow-[0_0_10px_rgba(187,252,7,0.5)]" style={{ left: `${progressPercent}%` }}></div>
                         </div>
                         <div className="flex justify-between text-xs text-gray-400 font-medium">
-                            <span>1:26</span>
-                            <span>3:21</span>
+                            <span>{formatTime(currentTime)}</span>
+                            <span>{formatTime(duration)}</span>
                         </div>
                     </div>
 
@@ -126,30 +171,15 @@ const MusicPlay = () => {
                         </button>
                         <button
                             className="w-20 h-20 bg-(--green) rounded-full flex items-center justify-center text-black text-3xl shadow-[0_0_30px_rgba(187,252,7,0.3)] hover:scale-105 transition-transform"
-                            onClick={() => setIsPlaying(!isPlaying)}
+                            onClick={() => { dispatch(isSongPlaying(!isCurrentSongPlaying)) }}
                         >
-                            <i className={`fa-solid ${isPlaying ? 'fa-pause' : 'fa-play ml-1'}`}></i>
+                            <i className={`fa-solid ${isCurrentSongPlaying ? 'fa-pause' : 'fa-play ml-1'}`}></i>
                         </button>
                         <button className="text-white hover:text-(--green) transition-colors">
                             <i className="fa-solid fa-forward-step text-2xl"></i>
                         </button>
                         <button className="text-gray-400 hover:text-white transition-colors">
                             <i className="fa-solid fa-repeat text-xl"></i>
-                        </button>
-                    </div>
-
-                    {/* Tabs */}
-                    <div className="flex items-center justify-center gap-12 text-xs font-semibold tracking-widest text-gray-400 border-t border-gray-800 pt-6">
-                        <button className="hover:text-white transition-colors flex items-center gap-2 text-white">
-                            <i className="fa-solid fa-list"></i> LYRICS
-                        </button>
-                        <div className="w-px h-4 bg-gray-800"></div>
-                        <button className="hover:text-white transition-colors flex items-center gap-2">
-                            <i className="fa-solid fa-list-ul"></i> QUEUE
-                        </button>
-                        <div className="w-px h-4 bg-gray-800"></div>
-                        <button className="hover:text-white transition-colors flex items-center gap-2">
-                            <i className="fa-solid fa-circle-info"></i> INFO
                         </button>
                     </div>
                 </div>
@@ -227,6 +257,7 @@ const MusicPlay = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

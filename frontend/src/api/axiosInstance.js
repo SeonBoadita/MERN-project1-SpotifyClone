@@ -9,7 +9,8 @@ const api = axios.create({
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401 || error.response?.status === 404) {
+        const isOnAuthPage = window.location.pathname === "/login" || window.location.pathname === "/author-login";
+        if (error.response?.status === 401 && !isOnAuthPage) {
             window.location.href = "/login";
         }
         return Promise.reject(error);

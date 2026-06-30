@@ -1,12 +1,12 @@
+import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { currentSongPlaying } from "../../store/features/player/playerSlice"
 const SongCard = ({ song, index }) => {
 
     const navigate = useNavigate()
 
-    // Fallback image in case the music doesn't have a thumbnail
     const thumbnail = song?.musicThumbnail || "https://placehold.co/100x100?text=No+Image"
     const name = song?.musicName || "Unknown Song"
-    const uri = song?.musicURI || ""
 
     // Format duration from seconds to MM:SS
     const formatDuration = (seconds) => {
@@ -16,16 +16,16 @@ const SongCard = ({ song, index }) => {
         return `${m}:${s < 10 ? '0' : ''}${s}`;
     };
 
+
+    const dispatch = useDispatch();
     const displayDuration = formatDuration(song?.duration);
 
     return (
         <>
-            {/* 
-                Here is where the music URL can be used! 
-                When you navigate to /play, you can pass the URL via state, 
-                so the playback page knows which song to play.
-            */}
-            <tbody onClick={() => navigate('/play', { state: { musicURI: uri, musicName: name, musicThumbnail: thumbnail } })} className="hover:bg-(--transparent-light-green) bg-[#ffffff13] h-10 cursor-pointer">
+            <tbody onClick={() => {
+                navigate('/play');
+                dispatch(currentSongPlaying(song));
+            }} className="hover:bg-(--transparent-light-green) bg-[#ffffff13] h-10 cursor-pointer">
                 <tr>
                     <td className="px-4 py-2 rounded-l-[5px] border-y border-l border-(--transparent-mid-green)">{index || 1}</td>
                     <td className="px-4 py-2 border-y border-(--transparent-mid-green)">

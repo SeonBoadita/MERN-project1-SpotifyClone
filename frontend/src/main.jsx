@@ -7,15 +7,19 @@ import { MusicProvider } from './context/MusicContext.jsx'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { ScrollTrigger } from 'gsap/all'
+import { Provider } from 'react-redux'
+import store from './store/store.js'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
+    <Provider store={store}>
       <MusicProvider>
         <App />
       </MusicProvider>
+    </Provider>
     </BrowserRouter>
   </StrictMode>,
 )
