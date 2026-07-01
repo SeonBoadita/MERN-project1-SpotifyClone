@@ -11,7 +11,7 @@ import { isSongPlaying } from '../store/features/player/playerSlice';
 const DvdModel = () => {
     const { scene } = useGLTF(dvdModelUrl);
     const modelRef = useRef();
-    // Read thumbnail directly from Redux store
+
     const currentSong = useSelector((state) => state.player.currentSong);
     const thumbnailUrl = currentSong?.musicThumbnail || img;
     const texture = useTexture(thumbnailUrl, (loadedTexture) => {
@@ -59,7 +59,6 @@ const MusicPlay = () => {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
 
-    // Play or pause when Redux state changes
     useEffect(() => {
         if (!audioRef.current) return;
         if (isCurrentSongPlaying) {

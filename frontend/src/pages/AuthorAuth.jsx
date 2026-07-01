@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 const AuthorAuth = ({ defaultIsLogin = true }) => {
     const [isLogin, setIsLogin] = useState(defaultIsLogin);
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         // Mock authentication, redirect to home
+        login({ role: "author", username: "Creator" });
         navigate('/');
     };
 

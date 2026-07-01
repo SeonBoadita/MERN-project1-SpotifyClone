@@ -1,10 +1,12 @@
 import api from '../api/axiosInstance';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 const Auth = ({ defaultIsLogin = true }) => {
     const [isLogin, setIsLogin] = useState(defaultIsLogin);
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -16,6 +18,7 @@ const Auth = ({ defaultIsLogin = true }) => {
             api.post('/auth/api/register', data)
                 .then(response => {
                     console.log('Registration successful:', response.data);
+                    login(response.data.user);
                     navigate('/');
                 })
                 .catch(error => {
@@ -25,6 +28,7 @@ const Auth = ({ defaultIsLogin = true }) => {
             api.post('/auth/api/login', data)
                 .then(response => {
                     console.log('Login successful:', response.data);
+                    login(response.data.user);
                     navigate('/');
                 })
                 .catch(error => {

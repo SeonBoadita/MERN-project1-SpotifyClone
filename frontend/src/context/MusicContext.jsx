@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import api from "../api/axiosInstance.js";
 
-const MusicContext = createContext(null);
+const MusicContext = createContext();
 
 export const MusicProvider = ({ children }) => {
     const [songs, setSongs] = useState([]);

@@ -1,10 +1,10 @@
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useContext } from "react"
 import gsap from "gsap"
 import SongCard from "../../reusableComponents/SongCard"
-import useMusic from '../../../context/useMusic.js'
+import MusicContext from "../../../context/MusicContext.jsx"
 
 const AllSongs = () => {
-    const { songs } = useMusic()
+    const { songs } = useContext(MusicContext)
     const listRef = useRef(null)
 
     useEffect(() => {
